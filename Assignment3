@@ -1,1 +1,194 @@
-test
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Movie Recommendation App</title>
+    <style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+  }
+  
+  .grid-item {
+    background-color: #ccc;
+    padding: 20px;
+    text-align: center;
+  }
+</style>
+  </head>
+  <body>
+    <h1>Movie Recommendation App</h1>
+    <form>
+    
+      <label for="genre">Genre:</label>
+      <select id="genre">
+        <option value="">--Select a genre--</option>
+        <option value="action">Action</option>
+        <option value="comedy">Comedy</option>
+        <option value="drama">Drama</option>
+        <option value="sci-fi">Science Fiction</option>
+        <option value="thriller">Thriller</option>
+      </select>
+      
+      <label for="yearpicker">Release Year:</label>
+       <select name="yearpicker" id="yearpicker"></select>
+       
+       
+        <label for="Language">Language:</label>
+      <select id="Language">
+        <option value="">Select Language</option>
+        <option value="English">English</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Punjabi">Punjabi</option>
+        </select>
+       
+      
+      <br><br>
+      
+      <label for="rating">Rating:</label>
+      <input type="number" id="rating" name="rating" min="0" max="10" step="1">
+      
+      <button type="button" id="search" onclick="filterTable()">Search</button>
+      <br><br>
+ 
+      
+    </form>
+    
+    <hr>
+    
+    <div id="recommendations"></div>
+    
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+    // Load movie data from a JSON file
+let movies = [];
+
+function loadMovies() {
+  fetch('movies.json')
+    .then(response => response.json())
+    .then(data => {
+      movies = data.movies;
+    });
+}
+
+loadMovies();
+
+// Function to filter movies based on user preferences
+function filterMovies(genre, rating, releaseYear, language) 
+{
+  return movies.filter(movie =>
+  {
+    return (genre === '' || movie.genre === genre) &&
+           (rating === null || movie.rating >= rating) &&
+           (language === '' || movie.genre === genre) &&
+           (releaseYear === null || movie.releaseYear === releaseYear);
+  });
+}
+
+
+
+// Function to display movie recommendations
+function displayRecommendations(movies) {
+  const recommendationsDiv = document.getElementById('recommendations');
+  recommendationsDiv.innerHTML = '';
+  if (movies.length === 0) {
+    recommendationsDiv.textContent = 'No recommendations found. Please try different preferences.';
+    return;
+  }
+  const ul = document.createElement('ul');
+  movies.forEach(movie => {
+    const li = document.createElement('li');
+    li.textContent = `${movie.title} (${movie.releaseYear}) - ${movie.genre} (${movie.rating})`;
+    ul.appendChild(li);
+  });
+  recommendationsDiv.appendChild(ul);
+}
+
+// Function to get user preferences and display movie recommendations
+function getRecommendations() {
+  const genre = document.getElementById('genre').value;
+  const rating = parseFloat(document.getElementById('rating').value);
+  const releaseYear = parseInt(document.getElementById('release-year').value);
+  const filteredMovies = filterMovies(genre, rating, releaseYear, language);
+  displayRecommendations(filteredMovies);
+}
+ let startYear = 1999;
+    let endYear = new Date().getFullYear();
+    for (i = endYear; i > startYear; i--)
+    {
+      $('#yearpicker').append($('<option />').val(i).html(i));
+    }
+    
+    
+    
+    
+    
+    	// Dummy database
+		const data = [
+			{Genre: 'Action', Year: 2021, Language: 'Hindi', Rating: '1', Rank: '1', Movie: 'Phatan'},
+			{Genre: 'Action', Year: 2019, Language: 'Hindi', Rating: '2', Rank: '2', Movie: 'Cool'},
+			{Genre: 'Drama', Year: 2016, Language: 'English', Rating: '3', Rank: '3', Movie: 'java'},
+			{Genre: 'Drama', Year: 2011, Language: 'English', Rating: '4', Rank: '4', Movie: 'indian'}
+		];
+
+		// Function to filter data based on user input
+		function filterTable() {
+			// Get the search input value
+			const input = document.getElementById("search").value.toUpperCase();
+			// Get the table
+			const table = document.getElementById("myTable");
+			// Get the rows of the table
+			const rows = table.getElementsByTagName("tr");
+			// Loop through all table rows, and hide those that don't match the search query
+			for (let i = 1; i < rows.length; i++) {
+				const cells = rows[i].getElementsByTagName("td");
+				let found = false;
+				for (let j = 0; j < cells.length; j++) {
+					const cell = cells[j];
+					if (cell.innerHTML.toUpperCase().indexOf(input) > -1) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					rows[i].style.display = "";
+				} else {
+					rows[i].style.display = "none";
+				}
+			}
+		}
+
+		// Function to display data in the table
+		function displayData() {
+			// Get the table
+			const table = document.getElementById("myTable");
+			// Loop through the data and add a row for each item
+			for (let i = 0; i < data.length; i++) {
+				const row = table.insertRow(-1);
+				// Add cells to the row and populate them with data
+				const nameCell = row.insertCell(0);
+				nameCell.innerHTML = data[i].Rank;
+				const ageCell = row.insertCell(1);
+				ageCell.innerHTML = data[i].Movie;
+				const cityCell = row.insertCell(2);
+				cityCell.innerHTML = data[i].Year;
+			}
+		}
+
+		// Call the displayData function to populate the table with data
+		displayData();
+    </script>
+	
+	<table id="myTable" border="1">
+		<tr>
+			<th>Rank</th>
+			<th>Movie</th>
+			<th>Year</th>
+		</tr>
+	</table>
+  </body>
+</html>
+
